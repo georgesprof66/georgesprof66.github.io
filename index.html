@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Appréciations – Mathématiques</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fff;--bg2:#f6f6f4;--bg3:#efefec;
+  --tx:#1a1a18;--tx2:#6b6b67;--tx3:#9a9994;
+  --bd:rgba(0,0,0,0.13);--bd2:rgba(0,0,0,0.22);
+  --blue:#185FA5;--blue-bg:#E6F1FB;--blue-tx:#0C447C;
+  --green-bg:#EAF3DE;--green-tx:#27500A;--green-bd:#639922;
+  --red-bg:#FCEBEB;--red-tx:#791F1F;--red-bd:#F09595;
+  --amber-bg:#FAEEDA;--amber-tx:#633806;--amber-bd:#EF9F27;
+  --purple-bg:#EEEDFE;--purple-tx:#3C3489;--purple-bd:#AFA9EC;
+  --r:9px;--rL:14px;
+}
+@media(prefers-color-scheme:dark){:root{--bg:#1c1c1a;--bg2:#252523;--bg3:#2e2e2b;--tx:#f0ede8;--tx2:#9a9994;--tx3:#6b6b67;--bd:rgba(255,255,255,0.11);--bd2:rgba(255,255,255,0.2);--blue-bg:#0c2a44;--blue-tx:#85B7EB;--green-bg:#162a09;--green-tx:#C0DD97;--green-bd:#3B6D11;--red-bg:#2a0a0a;--red-tx:#F7C1C1;--red-bd:#A32D2D;--amber-bg:#2a1d04;--amber-tx:#FAC775;--amber-bd:#854F0B;--purple-bg:#1a1840;--purple-tx:#CECBF6;--purple-bd:#534AB7;}}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg3);color:var(--tx);min-height:100vh}
+.topbar{background:var(--bg);border-bottom:0.5px solid var(--bd);padding:0 14px;display:flex;align-items:center;position:sticky;top:0;z-index:100;overflow-x:auto;gap:0}
+.logo{font-size:14px;font-weight:600;padding:13px 0;margin-right:12px;white-space:nowrap;flex-shrink:0;color:var(--blue-tx)}
+.ntab{padding:14px 11px;font-size:13px;border:none;background:none;color:var(--tx2);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0}
+.ntab.on{color:var(--blue-tx);border-bottom-color:var(--blue);font-weight:500}
+.page{display:none;max-width:820px;margin:0 auto;padding:18px 14px}
+.page.active{display:block}
+.card{background:var(--bg);border:0.5px solid var(--bd);border-radius:var(--rL);padding:16px;margin-bottom:12px}
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.section-hdr h2{font-size:17px;font-weight:500}
+.cls-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:9px;margin-bottom:14px}
+.cls-card{background:var(--bg);border:0.5px solid var(--bd);border-radius:var(--rL);padding:13px;cursor:pointer;transition:all 0.15s}
+.cls-card:hover,.cls-card.active{border-color:var(--blue);background:var(--blue-bg)}
+.cls-card.active .cls-name{color:var(--blue-tx)}
+.cls-name{font-size:14px;font-weight:500}
+.cls-sub{font-size:12px;color:var(--tx2);margin-top:2px}
+.cls-cnt{font-size:11px;background:var(--bg2);padding:2px 8px;border-radius:20px;color:var(--tx3);display:inline-block;margin-top:5px}
+.fg{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+.fg label{font-size:11px;color:var(--tx2);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.fg input,.fg select{padding:8px 10px;font-size:13px;border-radius:var(--r);border:0.5px solid var(--bd2);background:var(--bg);color:var(--tx);width:100%}
+.fg input:focus,.fg select:focus{outline:none;border-color:var(--blue)}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
+.pills{display:flex;gap:5px;flex-wrap:wrap}
+.pill input{display:none}
+.pill label{padding:5px 10px;font-size:12px;border-radius:20px;border:0.5px solid var(--bd);cursor:pointer;color:var(--tx2);display:block;white-space:nowrap}
+.pill input:checked+label{background:var(--blue-bg);color:var(--blue-tx);border-color:var(--blue);font-weight:500}
+.btn{padding:8px 14px;font-size:13px;border-radius:var(--r);border:0.5px solid var(--bd2);background:var(--bg);color:var(--tx);cursor:pointer;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;transition:all 0.12s}
+.btn:hover{background:var(--bg2)}
+.btn-p{background:var(--blue-bg);color:var(--blue-tx);border-color:var(--blue)}
+.btn-p:hover{filter:brightness(.95)}
+.btn-full{width:100%;justify-content:center;padding:10px;font-size:14px}
+.btn-g{background:var(--green-bg);color:var(--green-tx);border-color:var(--green-bd)}
+.btn-r{background:var(--red-bg);color:var(--red-tx);border-color:var(--red-bd)}
+.stud-list{display:flex;flex-direction:column;gap:9px}
+.scard{background:var(--bg);border:0.5px solid var(--bd);border-radius:var(--rL);padding:13px}
+.stop{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px}
+.av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
+.si{flex:1;min-width:0}
+.sn{font-size:14px;font-weight:500}
+.sm{font-size:11px;color:var(--tx2);margin-top:2px;line-height:1.5}
+.badge{font-size:11px;padding:2px 9px;border-radius:20px;border:0.5px solid;font-weight:500;display:inline-block;margin-top:3px}
+.sep{height:0.5px;background:var(--bd);margin:8px 0}
+.albl{font-size:10px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;margin-top:8px}
+.abox{background:var(--bg2);border-radius:var(--r);padding:10px 12px;font-size:13px;line-height:1.7}
+.abox.c{border-left:2.5px solid var(--blue);border-radius:0 var(--r) var(--r) 0}
+.arow{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.gbtn{width:100%;padding:10px;font-size:13px;font-weight:500;border:0.5px solid var(--blue);background:var(--blue-bg);color:var(--blue-tx);border-radius:var(--r);cursor:pointer;margin-top:8px}
+.exp-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.ebtn{padding:16px;border-radius:var(--rL);border:0.5px solid var(--bd2);background:var(--bg);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;transition:all 0.12s}
+.ebtn:hover{border-color:var(--blue);background:var(--blue-bg);color:var(--blue-tx)}
+.ei{font-size:26px}
+.el{font-size:13px;font-weight:500;color:var(--tx)}
+.es{font-size:11px;color:var(--tx2);text-align:center}
+.empty{text-align:center;padding:28px;color:var(--tx3);font-size:13px;line-height:1.7}
+.info{background:var(--amber-bg);border:0.5px solid var(--amber-bd);border-radius:var(--r);padding:10px 14px;font-size:13px;color:var(--amber-tx);margin-bottom:12px}
+@media(max-width:480px){.exp-grid{grid-template-columns:1fr}.fgrid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo">📐 Maths</div>
+  <button class="ntab on" onclick="nav('p-cls')" id="nb-cls">📋 Classes</button>
+  <button class="ntab" onclick="nav('p-elv')" id="nb-elv">➕ Élève</button>
+  <button class="ntab" onclick="nav('p-exp')" id="nb-exp">⬇️ Exporter</button>
+</div>
+
+<!-- CLASSES -->
+<div class="page active" id="p-cls">
+  <div class="section-hdr">
+    <h2>Mes classes</h2>
+    <button class="btn btn-p" onclick="nav('p-elv')">➕ Ajouter un élève</button>
+  </div>
+  <div id="cls-grid" class="cls-grid"></div>
+  <div class="card">
+    <div style="font-size:13px;font-weight:500;color:var(--tx2);margin-bottom:12px">🏫 Nouvelle classe</div>
+    <div class="fg"><label>Nom de la classe</label><input type="text" id="nc-name" placeholder="Ex : Terminale SV, Seconde 4…" onkeydown="if(event.key==='Enter')addCls()"/></div>
+    <div class="fg"><label>Niveau</label><select id="nc-niv"><option>Grade 10 – Seconde</option><option>Grade 11 – Première</option><option>Grade 12 – Terminale</option></select></div>
+    <button class="btn btn-p btn-full" onclick="addCls()">✚ Créer la classe</button>
+  </div>
+  <div id="stu-sec" style="display:none">
+    <div class="section-hdr" style="margin-top:8px">
+      <h2 id="cls-title"></h2>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btn-g" onclick="nav('p-exp')">⬇️ Exporter</button>
+        <button class="btn btn-r" onclick="delCls()">🗑 Supprimer</button>
+      </div>
+    </div>
+    <div class="stud-list" id="stu-list"></div>
+  </div>
+</div>
+
+<!-- AJOUTER ÉLÈVE -->
+<div class="page" id="p-elv">
+  <div class="section-hdr"><h2>Ajouter un élève</h2></div>
+  <div id="no-cls" class="info" style="display:none">⚠️ Créez d'abord une classe dans l'onglet Classes.</div>
+  <div class="card" id="elv-form">
+    <div class="fgrid" style="margin-bottom:10px">
+      <div class="fg"><label>Classe</label><select id="f-cls" onchange="syncCls()"></select></div>
+      <div class="fg"><label>Prénom</label><input type="text" id="f-prenom" placeholder="Prénom"/></div>
+      <div class="fg"><label>Note 1 /20</label><input type="number" id="f-n1" min="0" max="20" step=".25" placeholder="12"/></div>
+      <div class="fg"><label>Note 2 /20</label><input type="number" id="f-n2" min="0" max="20" step=".25" placeholder="13"/></div>
+      <div class="fg"><label>Note 3 /20</label><input type="number" id="f-n3" min="0" max="20" step=".25" placeholder="14"/></div>
+    </div>
+    <div class="fg"><label>Comportement</label>
+      <div class="pills">
+        <div class="pill"><input type="radio" name="fc" id="fc1" value="excellent"><label for="fc1">😇 Excellent</label></div>
+        <div class="pill"><input type="radio" name="fc" id="fc2" value="tres_bien"><label for="fc2">🙂 Très bien</label></div>
+        <div class="pill"><input type="radio" name="fc" id="fc3" value="bon" checked><label for="fc3">👍 Bon</label></div>
+        <div class="pill"><input type="radio" name="fc" id="fc4" value="assez_bon"><label for="fc4">🤷 Assez bon</label></div>
+        <div class="pill"><input type="radio" name="fc" id="fc5" value="passable"><label for="fc5">😐 Passable</label></div>
+        <div class="pill"><input type="radio" name="fc" id="fc6" value="perturbateur"><label for="fc6">😤 Perturbateur</label></div>
+      </div>
+    </div>
+    <div class="fg"><label>Devoirs</label>
+      <div class="pills">
+        <div class="pill"><input type="radio" name="fd" id="fd1" value="toujours"><label for="fd1">✅ Toujours</label></div>
+        <div class="pill"><input type="radio" name="fd" id="fd2" value="regulier"><label for="fd2">📋 Régulier</label></div>
+        <div class="pill"><input type="radio" name="fd" id="fd3" value="souvent" checked><label for="fd3">👌 Souvent</label></div>
+        <div class="pill"><input type="radio" name="fd" id="fd4" value="parfois"><label for="fd4">⚠️ Parfois</label></div>
+        <div class="pill"><input type="radio" name="fd" id="fd5" value="rarement"><label for="fd5">❌ Rarement</label></div>
+        <div class="pill"><input type="radio" name="fd" id="fd6" value="jamais"><label for="fd6">🚫 Jamais</label></div>
+      </div>
+    </div>
+    <div class="fg" style="margin-bottom:14px"><label>Participation</label>
+      <div class="pills">
+        <div class="pill"><input type="radio" name="fp" id="fp1" value="tres_active"><label for="fp1">🙋 Très active</label></div>
+        <div class="pill"><input type="radio" name="fp" id="fp2" value="active" checked><label for="fp2">👋 Active</label></div>
+        <div class="pill"><input type="radio" name="fp" id="fp3" value="satisfaisante"><label for="fp3">🤚 Satisfaisante</label></div>
+        <div class="pill"><input type="radio" name="fp" id="fp4" value="timide"><label for="fp4">🤫 Timide</label></div>
+        <div class="pill"><input type="radio" name="fp" id="fp5" value="insuffisante"><label for="fp5">😶 Insuffisante</label></div>
+        <div class="pill"><input type="radio" name="fp" id="fp6" value="absente"><label for="fp6">🔇 Absente</label></div>
+      </div>
+    </div>
+    <button class="btn btn-p btn-full" onclick="addStudent()">✚ Ajouter l'élève</button>
+  </div>
+</div>
+
+<!-- EXPORTER -->
+<div class="page" id="p-exp">
+  <div class="section-hdr"><h2>Exporter</h2></div>
+  <div class="card">
+    <div class="fg"><label>Classe à exporter</label><select id="ex-cls" onchange="renderExPrev()"></select></div>
+    <div id="ex-prev"></div>
+    <div class="exp-grid">
+      <button class="ebtn" onclick="exportWord()"><span class="ei">📝</span><span class="el">Word (.doc)</span><span class="es">Prêt à imprimer</span></button>
+      <button class="ebtn" onclick="exportCSV()"><span class="ei">📊</span><span class="el">Excel (.csv)</span><span class="es">Tableau complet</span></button>
+      <button class="ebtn" onclick="exportHTML()"><span class="ei">🌐</span><span class="el">Page HTML</span><span class="es">Bulletin complet</span></button>
+      <button class="ebtn" onclick="exportTxt()"><span class="ei">📋</span><span class="el">Copier texte</span><span class="es">Presse-papiers</span></button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────
+let D={classes:[]};
+let AID=null;
+function save(){try{localStorage.setItem('maths_v7',JSON.stringify(D));}catch(e){}}
+function load(){try{const s=localStorage.getItem('maths_v7');if(s)D=JSON.parse(s);}catch(e){}renderAll();}
+function getCls(id){return D.classes.find(c=>c.id===(id||AID));}
+
+// ── NAV ───────────────────────────────────────────────────────────
+const PAGES=['p-cls','p-elv','p-exp'];
+const TABS=['nb-cls','nb-elv','nb-exp'];
+function nav(id){
+  PAGES.forEach(p=>document.getElementById(p).classList.remove('active'));
+  TABS.forEach(t=>document.getElementById(t).classList.remove('on'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById(TABS[PAGES.indexOf(id)]).classList.add('on');
+  if(id==='p-elv')renderFormCls();
+  if(id==='p-exp'){renderExSel();renderExPrev();}
+}
+
+// ── CLASSES ───────────────────────────────────────────────────────
+function renderAll(){renderClsGrid();renderStudents();}
+function renderClsGrid(){
+  const el=document.getElementById('cls-grid');
+  if(!D.classes.length){el.innerHTML='<div class="empty" style="grid-column:1/-1">Aucune classe. Créez-en une ci-dessous.</div>';return;}
+  el.innerHTML=D.classes.map(c=>`<div class="cls-card${c.id===AID?' active':''}" onclick="selCls('${c.id}')">
+    <div class="cls-name">${c.name}</div><div class="cls-sub">${c.niveau}</div>
+    <span class="cls-cnt">${c.students.length} élève(s) · ${c.students.filter(s=>s.appr).length} appr.</span>
+  </div>`).join('');
+}
+function selCls(id){AID=id;renderClsGrid();renderStudents();}
+function addCls(){
+  const name=document.getElementById('nc-name').value.trim();
+  const niveau=document.getElementById('nc-niv').value;
+  if(!name)return alert('Entrez un nom de classe.');
+  const c={id:'c'+Date.now(),name,niveau,students:[]};
+  D.classes.push(c);save();document.getElementById('nc-name').value='';
+  AID=c.id;renderAll();
+}
+function delCls(){
+  if(!AID||!confirm('Supprimer cette classe ?'))return;
+  D.classes=D.classes.filter(c=>c.id!==AID);
+  AID=D.classes.length?D.classes[0].id:null;
+  save();renderAll();
+}
+
+// ── LABELS ────────────────────────────────────────────────────────
+const CL={excellent:'Comportement excellent',tres_bien:'Très bon comportement',bon:'Bon comportement',assez_bon:'Comportement assez bon',passable:'Comportement passable',perturbateur:'Comportement perturbateur'};
+const DL={toujours:'Devoirs toujours rendus',regulier:'Devoirs réguliers',souvent:'Devoirs souvent rendus',parfois:'Devoirs parfois rendus',rarement:'Devoirs rarement rendus',jamais:'Devoirs jamais rendus'};
+const PL={tres_active:'Participation très active',active:'Participation active',satisfaisante:'Participation satisfaisante',timide:'Participation timide',insuffisante:'Participation insuffisante',absente:'Participation absente'};
+
+// ── BADGE ─────────────────────────────────────────────────────────
+function getBadge(m){
+  if(m<8)return{s:'background:#FCEBEB;color:#791F1F;border-color:#F09595',l:'En difficulté'};
+  if(m<10)return{s:'background:#FAEEDA;color:#633806;border-color:#EF9F27',l:'Insuffisant'};
+  if(m<12)return{s:'background:#E6F1FB;color:#0C447C;border-color:#85B7EB',l:'Passable'};
+  if(m<14)return{s:'background:#E6F1FB;color:#0C447C;border-color:#85B7EB',l:'Assez bien'};
+  if(m<16)return{s:'background:#EAF3DE;color:#27500A;border-color:#97C459',l:'Bien'};
+  if(m<18)return{s:'background:#EAF3DE;color:#27500A;border-color:#3B6D11',l:'Très bien'};
+  return{s:'background:#EEEDFE;color:#3C3489;border-color:#AFA9EC',l:'Excellent'};
+}
+function getAv(m){return m>=14?'background:#EAF3DE;color:#27500A':m>=10?'background:#E6F1FB;color:#0C447C':'background:#FCEBEB;color:#791F1F';}
+
+// ── APPRECIATION ENGINE (local, no API) ──────────────────────────
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+
+function genAppr(s, niveau){
+  const m=(s.n1+s.n2+s.n3)/3;
+  const evo=s.n3>s.n1?'hausse':s.n3<s.n1?'baisse':'stable';
+  const prenom=s.prenom;
+
+  // Note phrases
+  const notePhrase=m>=16?pick([
+    `${prenom} obtient d'excellents résultats en mathématiques avec une moyenne de ${m.toFixed(2)}/20.`,
+    `Les résultats de ${prenom} sont remarquables, avec une moyenne de ${m.toFixed(2)}/20.`,
+    `${prenom} affiche des performances très élevées en mathématiques (${m.toFixed(2)}/20).`
+  ]):m>=14?pick([
+    `${prenom} obtient de bons résultats en mathématiques avec une moyenne de ${m.toFixed(2)}/20.`,
+    `Les résultats de ${prenom} sont satisfaisants avec une moyenne de ${m.toFixed(2)}/20.`,
+    `${prenom} présente de bonnes performances en mathématiques (${m.toFixed(2)}/20).`
+  ]):m>=12?pick([
+    `${prenom} obtient des résultats corrects en mathématiques avec une moyenne de ${m.toFixed(2)}/20.`,
+    `Les résultats de ${prenom} sont assez bons avec une moyenne de ${m.toFixed(2)}/20.`,
+    `${prenom} affiche des résultats honorables en mathématiques (${m.toFixed(2)}/20).`
+  ]):m>=10?pick([
+    `${prenom} obtient des résultats passables en mathématiques avec une moyenne de ${m.toFixed(2)}/20.`,
+    `Les résultats de ${prenom} restent insuffisants avec une moyenne de ${m.toFixed(2)}/20.`,
+    `${prenom} peine à atteindre la moyenne en mathématiques (${m.toFixed(2)}/20).`
+  ]):pick([
+    `${prenom} est en grande difficulté en mathématiques avec une moyenne de ${m.toFixed(2)}/20.`,
+    `Les résultats de ${prenom} sont préoccupants avec une moyenne de ${m.toFixed(2)}/20.`,
+    `${prenom} rencontre de sérieuses difficultés en mathématiques (${m.toFixed(2)}/20).`
+  ]);
+
+  // Evolution phrase
+  const evoPhrase=evo==='hausse'?pick([
+    'On note une progression encourageante par rapport aux évaluations précédentes.',
+    'Les notes témoignent d\'une belle évolution positive.',
+    'Une progression notable est observée sur les dernières évaluations.'
+  ]):evo==='baisse'?pick([
+    'On note cependant une légère baisse par rapport aux évaluations précédentes.',
+    'Les résultats montrent un fléchissement qu\'il convient de corriger rapidement.',
+    'Une tendance à la baisse est observée et doit attirer l\'attention de l\'élève.'
+  ]):pick([
+    'Les résultats se maintiennent à un niveau constant.',
+    'Le niveau reste stable d\'une évaluation à l\'autre.',
+    'La régularité dans les résultats est appréciable.'
+  ]);
+
+  // Comportement phrase
+  const compPhrase={
+    excellent:pick(['Le comportement en classe est exemplaire.','L\'attitude en classe est irréprochable et mérite d\'être soulignée.']),
+    tres_bien:pick(['Le comportement en classe est très satisfaisant.','L\'attitude en classe est très positive.']),
+    bon:pick(['Le comportement en classe est correct.','L\'attitude en classe est bonne.']),
+    assez_bon:pick(['Le comportement en classe est globalement correct, avec quelques distractions ponctuelles.','L\'attitude en classe est acceptable bien que perfectible.']),
+    passable:pick(['Le comportement en classe laisse à désirer et doit s\'améliorer.','Des progrès sont nécessaires concernant le comportement en classe.']),
+    perturbateur:pick(['Le comportement perturbateur en classe nuit au travail du groupe et doit cesser immédiatement.','L\'attitude perturbatrice en classe est inacceptable et doit changer.'])
+  }[s.comp];
+
+  // Devoirs phrase
+  const devPhrase={
+    toujours:pick(['Les devoirs sont toujours rendus avec soin et dans les délais.','Le travail à la maison est régulier et de qualité.']),
+    regulier:pick(['Les devoirs sont rendus de façon régulière.','Le travail personnel à la maison est régulier.']),
+    souvent:pick(['Les devoirs sont généralement rendus, avec quelques oublis ponctuels.','Le travail à la maison est souvent au rendez-vous.']),
+    parfois:pick(['Les devoirs ne sont pas rendus avec suffisamment de régularité.','Le travail personnel est trop irrégulier.']),
+    rarement:pick(['Les devoirs sont rarement rendus, ce qui pénalise sérieusement les apprentissages.','Le manque de travail personnel à la maison est préjudiciable.']),
+    jamais:pick(['Les devoirs ne sont jamais rendus, ce qui est inacceptable.','L\'absence totale de travail personnel est inadmissible.'])
+  }[s.dev];
+
+  // Participation phrase
+  const partPhrase={
+    tres_active:pick(['La participation en classe est remarquable et très enrichissante.','L\'élève intervient de façon très active et pertinente en cours.']),
+    active:pick(['La participation en classe est active et appréciée.','L\'élève s\'implique régulièrement dans les échanges en classe.']),
+    satisfaisante:pick(['La participation en classe est satisfaisante.','L\'élève participe raisonnablement en cours.']),
+    timide:pick(['La participation en classe reste timide et gagnerait à être plus affirmée.','L\'élève devrait davantage s\'impliquer dans les échanges en classe.']),
+    insuffisante:pick(['La participation en classe est insuffisante et doit progresser.','Un manque de participation évident est à souligner.']),
+    absente:pick(['L\'élève ne participe pas en classe, ce qui est préoccupant.','L\'absence de participation en classe est un frein aux apprentissages.'])
+  }[s.part];
+
+  const appreciation=`${notePhrase} ${evoPhrase} ${compPhrase} ${devPhrase}`;
+
+  // CONSEIL
+  const conseil=m>=16?pick([
+    `${prenom} possède d'excellentes bases en mathématiques. Pour aller encore plus loin, il est conseillé de s'entraîner sur des exercices de niveau supérieur et de développer son raisonnement démonstratif. Continuez sur cette voie remarquable !`,
+    `Le niveau de ${prenom} en mathématiques est excellent. L'objectif est désormais de consolider cette maîtrise par des entraînements réguliers aux épreuves du baccalauréat et d'approfondir la rigueur dans les démonstrations. Bravo, continuez ainsi !`
+  ]):m>=14?pick([
+    `${prenom} maîtrise bien les mathématiques. Pour progresser encore, il est recommandé de revoir régulièrement les cours et de s'exercer davantage sur les types d'exercices les plus complexes. Un effort soutenu permettra d'atteindre l'excellence.`,
+    `Le travail de ${prenom} est sérieux. Pour consolider ces bons résultats, il est conseillé de multiplier les exercices d'application et de ne pas hésiter à poser des questions en cas de doute. Continuez à vous investir !`
+  ]):m>=12?pick([
+    `${prenom} a un niveau correct mais doit persévérer. Il est recommandé de reprendre régulièrement les notions du cours, de multiplier les exercices d'entraînement et de solliciter de l'aide dès que des lacunes apparaissent.`,
+    `Pour progresser, ${prenom} devrait consacrer plus de temps au travail personnel en mathématiques, en commençant par réviser les définitions et théorèmes fondamentaux. La régularité dans le travail est la clé de la réussite.`
+  ]):m>=10?pick([
+    `${prenom} doit impérativement renforcer son travail en mathématiques. Il est conseillé de revoir les bases du programme, de refaire les exercices corrigés en classe et de demander un soutien personnalisé si nécessaire. La volonté de progresser est indispensable.`,
+    `Pour améliorer ses résultats, ${prenom} doit mettre en place un travail rigoureux et quotidien en mathématiques : révision des cours, entraînement sur les exercices types et consultation régulière du professeur.`
+  ]):pick([
+    `${prenom} doit prendre conscience de l'urgence de la situation et s'investir réellement dans le travail mathématique. Un soutien scolaire est fortement recommandé. La persévérance et la régularité sont les seules voies vers le progrès.`,
+    `La situation en mathématiques requiert une prise en charge immédiate. Il est vivement conseillé à ${prenom} de retravailler les fondamentaux du programme, d'accepter une aide extérieure et de s'astreindre à un travail personnel quotidien.`
+  ]);
+
+  return {appreciation, conseil};
+}
+
+// ── STUDENTS ──────────────────────────────────────────────────────
+function renderStudents(){
+  const sec=document.getElementById('stu-sec');
+  if(!AID){sec.style.display='none';return;}
+  const cls=getCls();if(!cls){sec.style.display='none';return;}
+  sec.style.display='block';
+  document.getElementById('cls-title').textContent=cls.name+' — '+cls.students.length+' élève(s)';
+  const list=document.getElementById('stu-list');
+  if(!cls.students.length){list.innerHTML='<div class="empty">Aucun élève. Cliquez sur "Ajouter un élève".</div>';return;}
+  list.innerHTML=cls.students.map(s=>{
+    const m=(s.n1+s.n2+s.n3)/3;
+    const{s:bs,l:bl}=getBadge(m);
+    const evo=s.n3>s.n1?'↑':s.n3<s.n1?'↓':'→';
+    const ini=s.prenom.substring(0,2).toUpperCase();
+    const body=s.appr?`
+      <div class="albl">Appréciation</div><div class="abox">${s.appr}</div>
+      <div class="albl">Conseil</div><div class="abox c">${s.conseil||''}</div>
+      <div class="arow">
+        <button class="btn btn-g" onclick="copyOne('${s.id}')">📋 Copier</button>
+        <button class="btn" onclick="regen('${s.id}')">🔄 Régénérer</button>
+        <button class="btn btn-r" onclick="delSt('${s.id}')">🗑</button>
+      </div>`:
+      `<button class="gbtn" onclick="generate('${s.id}')">✨ Générer l'appréciation</button>
+      <div style="text-align:right;margin-top:6px"><button class="btn btn-r" onclick="delSt('${s.id}')">🗑 Supprimer</button></div>`;
+    return`<div class="scard">
+      <div class="stop">
+        <div class="av" style="${getAv(m)}">${ini}</div>
+        <div class="si">
+          <div class="sn">${s.prenom} <span style="font-size:11px;color:var(--tx3)">${evo}</span></div>
+          <div class="sm">${s.n1} / ${s.n2} / ${s.n3} · Moy: ${m.toFixed(2)}/20</div>
+          <div class="sm">${CL[s.comp]} · ${DL[s.dev]} · ${PL[s.part]}</div>
+          <span class="badge" style="${bs}">Moy. ${m.toFixed(2)}/20 – ${bl}</span>
+        </div>
+      </div>
+      <div class="sep"></div>${body}
+    </div>`;
+  }).join('');
+}
+
+function renderFormCls(){
+  const sel=document.getElementById('f-cls');
+  const warn=document.getElementById('no-cls');
+  const form=document.getElementById('elv-form');
+  if(!D.classes.length){warn.style.display='block';form.style.display='none';return;}
+  warn.style.display='none';form.style.display='block';
+  sel.innerHTML=D.classes.map(c=>`<option value="${c.id}">${c.name} – ${c.niveau}</option>`).join('');
+  if(AID)sel.value=AID;
+}
+function syncCls(){AID=document.getElementById('f-cls').value;}
+
+function addStudent(){
+  const clsId=document.getElementById('f-cls').value;
+  const prenom=document.getElementById('f-prenom').value.trim();
+  const n1=parseFloat(document.getElementById('f-n1').value);
+  const n2=parseFloat(document.getElementById('f-n2').value);
+  const n3=parseFloat(document.getElementById('f-n3').value);
+  const comp=document.querySelector('input[name="fc"]:checked')?.value||'bon';
+  const dev=document.querySelector('input[name="fd"]:checked')?.value||'souvent';
+  const part=document.querySelector('input[name="fp"]:checked')?.value||'active';
+  if(!prenom)return alert('Entrez le prénom.');
+  if(isNaN(n1)||isNaN(n2)||isNaN(n3))return alert('Entrez les 3 notes.');
+  getCls(clsId).students.push({id:'s'+Date.now(),prenom,n1,n2,n3,comp,dev,part,appr:'',conseil:''});
+  save();AID=clsId;
+  ['f-prenom','f-n1','f-n2','f-n3'].forEach(id=>document.getElementById(id).value='');
+  renderAll();nav('p-cls');
+}
+
+function delSt(sid){
+  if(!confirm('Supprimer ?'))return;
+  const cls=getCls();cls.students=cls.students.filter(s=>s.id!==sid);
+  save();renderStudents();renderClsGrid();
+}
+
+function generate(sid){
+  const cls=getCls();const s=cls.students.find(x=>x.id===sid);if(!s)return;
+  const{appreciation,conseil}=genAppr(s,cls.niveau);
+  s.appr=appreciation;s.conseil=conseil;
+  save();renderStudents();renderClsGrid();
+}
+
+function regen(sid){
+  const cls=getCls();const s=cls.students.find(x=>x.id===sid);
+  if(s){s.appr='';s.conseil='';}
+  save();renderStudents();
+  setTimeout(()=>generate(sid),50);
+}
+
+function copyOne(sid){
+  const cls=getCls();const s=cls.students.find(x=>x.id===sid);if(!s)return;
+  const m=((s.n1+s.n2+s.n3)/3).toFixed(2);
+  navigator.clipboard.writeText(`${s.prenom} — ${cls.niveau} — Moy. ${m}/20\n\nAppréciation :\n${s.appr}\n\nConseil :\n${s.conseil}`)
+    .then(()=>alert('✅ Copié !')).catch(()=>{});
+}
+
+// ── EXPORT ────────────────────────────────────────────────────────
+function renderExSel(){
+  const sel=document.getElementById('ex-cls');
+  sel.innerHTML=D.classes.map(c=>`<option value="${c.id}">${c.name} – ${c.niveau}</option>`).join('');
+  if(AID)sel.value=AID;
+}
+function getExCls(){return getCls(document.getElementById('ex-cls').value);}
+function renderExPrev(){
+  const cls=getExCls();const el=document.getElementById('ex-prev');
+  if(!cls){el.innerHTML='';return;}
+  const done=cls.students.filter(s=>s.appr).length;
+  el.innerHTML=`<div style="background:var(--bg2);border-radius:var(--r);padding:9px 12px;font-size:13px;color:var(--tx2);margin-bottom:8px"><b style="color:var(--tx)">${cls.name}</b> · ${cls.students.length} élève(s) · <span style="color:#27500A;font-weight:500">${done} appréciation(s) prête(s)</span></div>`;
+}
+
+function exportWord(){
+  const cls=getExCls();if(!cls)return alert('Sélectionnez une classe.');
+  const rows=cls.students.filter(s=>s.appr);
+  if(!rows.length)return alert('Aucune appréciation générée.');
+  const html=`<html><head><meta charset="utf-8"><style>body{font-family:Calibri,sans-serif;font-size:12pt;margin:2cm;color:#1a1a18}h1{font-size:16pt;color:#0C447C;border-bottom:2pt solid #E6F1FB;padding-bottom:6pt;margin-bottom:18pt}.s{margin-bottom:18pt;padding-bottom:12pt;border-bottom:.5pt solid #e0e0e0;page-break-inside:avoid}.n{font-size:14pt;font-weight:bold}.m{font-size:10pt;color:#6b6b67;margin:3pt 0 8pt}.l{font-size:9pt;font-weight:bold;color:#9a9994;text-transform:uppercase;letter-spacing:.5pt;margin-bottom:2pt}.a{font-size:11pt;line-height:1.6;margin-bottom:8pt}.c{font-size:11pt;line-height:1.6;padding-left:8pt;border-left:3pt solid #185FA5}</style></head><body>
+  <h1>Appréciations – Mathématiques<br><span style="font-size:11pt;font-weight:normal">${cls.name} — ${cls.niveau}</span></h1>
+  ${rows.map(s=>{const m=((s.n1+s.n2+s.n3)/3).toFixed(2);return`<div class="s"><div class="n">${s.prenom}</div><div class="m">Moy.${m}/20 · ${s.n1}/${s.n2}/${s.n3} · ${CL[s.comp]} · ${DL[s.dev]} · ${PL[s.part]}</div><div class="l">Appréciation</div><div class="a">${s.appr}</div><div class="l">Conseil</div><div class="c">${s.conseil}</div></div>`;}).join('')}
+  </body></html>`;
+  dl('\ufeff'+html,'application/msword',`appreciations_${cls.name.replace(/\s+/g,'_')}.doc`);
+}
+
+function exportCSV(){
+  const cls=getExCls();if(!cls)return alert('Sélectionnez une classe.');
+  const rows=cls.students.filter(s=>s.appr);
+  if(!rows.length)return alert('Aucune appréciation générée.');
+  const e=v=>'"'+String(v||'').replace(/"/g,'""')+'"';
+  const h=['Prénom','Niveau','Note1','Note2','Note3','Moyenne','Comportement','Devoirs','Participation','Appréciation','Conseil'].map(e).join(',');
+  const lines=rows.map(s=>{const m=((s.n1+s.n2+s.n3)/3).toFixed(2);return[s.prenom,cls.niveau,s.n1,s.n2,s.n3,m,CL[s.comp],DL[s.dev],PL[s.part],s.appr,s.conseil].map(e).join(',');});
+  dl('\uFEFF'+[h,...lines].join('\n'),'text/csv;charset=utf-8',`appreciations_${cls.name.replace(/\s+/g,'_')}.csv`);
+}
+
+function exportHTML(){
+  const cls=getExCls();if(!cls)return alert('Sélectionnez une classe.');
+  const rows=cls.students.filter(s=>s.appr);
+  if(!rows.length)return alert('Aucune appréciation générée.');
+  const html=`<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"/><title>${cls.name}</title><style>body{font-family:Calibri,sans-serif;background:#f5f5f3;margin:0;padding:2rem}.hdr{background:#0C447C;color:#fff;padding:20px 28px;border-radius:12px;margin-bottom:24px}.hdr h1{font-size:20px;margin:0 0 4px}.hdr p{font-size:13px;opacity:.75;margin:0}.sc{background:#fff;border:1px solid #e0e0e0;border-radius:12px;padding:18px;margin-bottom:14px;page-break-inside:avoid}.sn{font-size:16px;font-weight:bold;margin-bottom:3px}.sm{font-size:12px;color:#6b6b67;margin-bottom:8px}.lb{font-size:10px;font-weight:bold;color:#9a9994;text-transform:uppercase;letter-spacing:.5pt;margin-bottom:3px;margin-top:10px}.ab{font-size:13px;line-height:1.7;background:#f6f6f4;border-radius:8px;padding:10px 14px}.cb{font-size:13px;line-height:1.7;background:#f6f6f4;border-radius:0 8px 8px 0;padding:10px 14px;border-left:3px solid #185FA5}</style></head><body>
+  <div class="hdr"><h1>Appréciations – Mathématiques</h1><p>${cls.name} — ${cls.niveau} — ${rows.length} élève(s)</p></div>
+  ${rows.map(s=>{const m=((s.n1+s.n2+s.n3)/3).toFixed(2);return`<div class="sc"><div class="sn">${s.prenom}</div><div class="sm">Moy.${m}/20 · ${s.n1}/${s.n2}/${s.n3} · ${CL[s.comp]} · ${DL[s.dev]} · ${PL[s.part]}</div><div class="lb">Appréciation</div><div class="ab">${s.appr}</div><div class="lb">Conseil</div><div class="cb">${s.conseil}</div></div>`;}).join('')}
+  </body></html>`;
+  dl(html,'text/html;charset=utf-8',`bulletin_${cls.name.replace(/\s+/g,'_')}.html`);
+}
+
+function exportTxt(){
+  const cls=getExCls();if(!cls)return alert('Sélectionnez une classe.');
+  const rows=cls.students.filter(s=>s.appr);
+  if(!rows.length)return alert('Aucune appréciation générée.');
+  const txt=`CLASSE : ${cls.name} — ${cls.niveau}\n${'═'.repeat(50)}\n\n`+
+    rows.map(s=>{const m=((s.n1+s.n2+s.n3)/3).toFixed(2);return`${s.prenom} — Moy.${m}/20\nAppréciation :\n${s.appr}\n\nConseil :\n${s.conseil}`;}).join('\n\n'+'-'.repeat(50)+'\n\n');
+  navigator.clipboard.writeText(txt).then(()=>alert('✅ Tout copié !')).catch(()=>alert('Erreur copie.'));
+}
+
+function dl(content,type,filename){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([content],{type}));
+  a.download=filename;a.click();
+}
+
+load();
+</script>
+</body>
+</html>
