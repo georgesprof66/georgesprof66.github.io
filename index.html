@@ -147,6 +147,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .stat-val{font-size:22px;font-weight:700;color:var(--blue-tx)}
 .stat-lbl{font-size:11px;color:var(--tx2);margin-top:2px}
 
+/* ─── ARCHIVE CARDS ─── */
+.arc-card{background:var(--bg);border:0.5px solid var(--bd);border-radius:var(--rL);padding:16px;margin-bottom:10px;box-shadow:var(--shadow);transition:box-shadow 0.15s}
+.arc-card:hover{box-shadow:var(--shadow-lg)}
+.arc-top{display:flex;align-items:flex-start;gap:12px}
+.arc-icon{width:44px;height:44px;background:var(--blue-bg);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.arc-info{flex:1;min-width:0}
+.arc-title{font-size:14px;font-weight:600;color:var(--tx)}
+.arc-sub{font-size:12px;color:var(--tx2);margin-top:3px;line-height:1.5}
+.arc-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.arc-tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;background:var(--blue-bg);color:var(--blue-tx);border:0.5px solid var(--blue)}
+
 @media(max-width:480px){
   .exp-grid{grid-template-columns:1fr}
   .fgrid{grid-template-columns:1fr 1fr}
@@ -171,6 +182,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
     <button class="ntab on" onclick="nav('p-cls')" id="nb-cls">📋 Classes</button>
     <button class="ntab" onclick="nav('p-elv')" id="nb-elv">➕ Ajouter élève</button>
     <button class="ntab" onclick="nav('p-exp')" id="nb-exp">⬇️ Exporter</button>
+    <button class="ntab" onclick="nav('p-arc')" id="nb-arc">🗄️ Archives</button>
   </div>
 </div>
 
@@ -181,7 +193,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <h2>Mes classes</h2>
       <div class="shdr-sub" id="global-stats-txt"></div>
     </div>
-    <button class="btn btn-p" onclick="nav('p-elv')">➕ Ajouter un élève</button>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-g" onclick="openSaveModal()" title="Sauvegarder ce semestre en archive">💾 Sauvegarder</button>
+      <button class="btn btn-p" onclick="nav('p-elv')">➕ Ajouter un élève</button>
+    </div>
   </div>
 
   <div id="stats-bar" style="display:none" class="stats">
@@ -285,6 +300,73 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   </div>
 </div>
 
+<!-- ══ PAGE ARCHIVES ══ -->
+<div class="page" id="p-arc">
+  <div class="shdr">
+    <div>
+      <h2>🗄️ Archives</h2>
+      <div class="shdr-sub">Sauvegardes par semestre et par année scolaire</div>
+    </div>
+    <label class="btn btn-p" style="cursor:pointer">
+      📂 Charger une archive
+      <input type="file" id="import-file" accept=".json" onchange="importArchive(event)" style="display:none"/>
+    </label>
+  </div>
+
+  <div class="card" style="background:var(--blue-bg);border-color:var(--blue)">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <div style="font-size:28px">💾</div>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:600;color:var(--blue-tx)">Sauvegarder le semestre actuel</div>
+        <div style="font-size:12px;color:var(--blue-tx);opacity:0.8;margin-top:2px">Enregistre toutes vos classes, élèves, notes et appréciations dans un fichier.</div>
+      </div>
+      <button class="btn btn-p" onclick="openSaveModal()">💾 Sauvegarder maintenant</button>
+    </div>
+  </div>
+
+  <div id="arc-list"></div>
+</div>
+
+<!-- ══ MODAL SAUVEGARDER ══ -->
+<div class="modal-overlay" id="save-modal" onclick="closeSaveModal(event)">
+  <div class="modal">
+    <div class="modal-title">💾 Sauvegarder le semestre</div>
+    <div style="font-size:13px;color:var(--tx2);margin-bottom:14px;line-height:1.6">
+      Cette sauvegarde contiendra toutes vos classes, les noms des élèves, leurs notes et leurs appréciations. Vous pourrez la recharger à tout moment.
+    </div>
+    <div class="fg">
+      <label>Année scolaire</label>
+      <select id="save-year">
+        <option>2024–2025</option>
+        <option>2025–2026</option>
+        <option>2026–2027</option>
+        <option>2027–2028</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>Semestre / Période</label>
+      <div class="pills" style="margin-top:4px">
+        <div class="pill"><input type="radio" name="save-sem" id="ss1" value="Semestre 1" checked><label for="ss1">📘 Semestre 1</label></div>
+        <div class="pill"><input type="radio" name="save-sem" id="ss2" value="Semestre 2"><label for="ss2">📗 Semestre 2</label></div>
+        <div class="pill"><input type="radio" name="save-sem" id="ss3" value="Année complète"><label for="ss3">📚 Année complète</label></div>
+        <div class="pill"><input type="radio" name="save-sem" id="ss4" value="Trimestre 1"><label for="ss4">1️⃣ Trimestre 1</label></div>
+        <div class="pill"><input type="radio" name="save-sem" id="ss5" value="Trimestre 2"><label for="ss5">2️⃣ Trimestre 2</label></div>
+        <div class="pill"><input type="radio" name="save-sem" id="ss6" value="Trimestre 3"><label for="ss6">3️⃣ Trimestre 3</label></div>
+      </div>
+    </div>
+    <div class="fg">
+      <label>Note (optionnel)</label>
+      <input type="text" id="save-note" placeholder="Ex : Avant les examens du bac…"/>
+    </div>
+    <div id="save-summary" style="background:var(--bg2);border-radius:var(--r);padding:10px 14px;font-size:13px;color:var(--tx2);margin-bottom:4px;border:0.5px solid var(--bd)"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeSaveModal()">Annuler</button>
+      <button class="btn btn-g" onclick="saveArchiveToDevice()">⬇️ Télécharger fichier</button>
+      <button class="btn btn-p" onclick="saveArchiveLocal()">💾 Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══ MODAL MODIFIER ÉLÈVE ══ -->
 <div class="modal-overlay" id="edit-modal" onclick="closeModal(event)">
   <div class="modal">
@@ -343,8 +425,8 @@ function load(){try{const s=localStorage.getItem('maths_gy_v1');if(s)D=JSON.pars
 function getCls(id){return D.classes.find(c=>c.id===(id||AID));}
 
 // ── NAVIGATION ────────────────────────────────────────────────────────────
-const PAGES=['p-cls','p-elv','p-exp'];
-const TABS=['nb-cls','nb-elv','nb-exp'];
+const PAGES=['p-cls','p-elv','p-exp','p-arc'];
+const TABS=['nb-cls','nb-elv','nb-exp','nb-arc'];
 function nav(id){
   PAGES.forEach(p=>document.getElementById(p).classList.remove('active'));
   TABS.forEach(t=>document.getElementById(t).classList.remove('on'));
@@ -352,6 +434,7 @@ function nav(id){
   document.getElementById(TABS[PAGES.indexOf(id)]).classList.add('on');
   if(id==='p-elv')renderFormCls();
   if(id==='p-exp'){renderExSel();renderExPrev();}
+  if(id==='p-arc')renderArchives();
 }
 
 // ── CLASSES ───────────────────────────────────────────────────────────────
@@ -803,6 +886,191 @@ function exportTxt(){
   navigator.clipboard.writeText(txt).then(()=>alert('✅ Tout copié !')).catch(()=>alert('Erreur de copie.'));
 }
 
+// ── ARCHIVE SYSTEM ────────────────────────────────────────────────────────
+let archives = [];
+
+function loadArchives(){
+  try{const s=localStorage.getItem('maths_gy_archives');if(s)archives=JSON.parse(s);}catch(e){archives=[];}
+}
+function saveArchives(){
+  try{localStorage.setItem('maths_gy_archives',JSON.stringify(archives));}catch(e){}
+}
+
+function openSaveModal(){
+  // Update summary
+  const total=D.classes.reduce((a,c)=>a+c.students.length,0);
+  const appr=D.classes.reduce((a,c)=>a+c.students.filter(s=>s.appr).length,0);
+  document.getElementById('save-summary').innerHTML=
+    `<b style="color:var(--tx)">Contenu de la sauvegarde :</b><br>
+     📋 ${D.classes.length} classe(s) &nbsp;·&nbsp; 👤 ${total} élève(s) &nbsp;·&nbsp; ✅ ${appr} appréciation(s)`;
+  // Auto-fill year
+  const now=new Date();
+  const yr=now.getFullYear();
+  const month=now.getMonth();
+  const yearStr=month>=8?`${yr}–${yr+1}`:`${yr-1}–${yr}`;
+  const selYear=document.getElementById('save-year');
+  for(let i=0;i<selYear.options.length;i++){
+    if(selYear.options[i].value===yearStr){selYear.selectedIndex=i;break;}
+  }
+  // Auto-pick semester
+  if(month>=8&&month<=12){document.getElementById('ss1').checked=true;}
+  else{document.getElementById('ss2').checked=true;}
+  document.getElementById('save-modal').classList.add('open');
+}
+
+function closeSaveModal(e){
+  if(!e||e.target===document.getElementById('save-modal'))
+    document.getElementById('save-modal').classList.remove('open');
+}
+
+function buildArchiveObj(){
+  const year=document.getElementById('save-year').value;
+  const sem=document.querySelector('input[name="save-sem"]:checked')?.value||'Semestre 1';
+  const note=document.getElementById('save-note').value.trim();
+  const total=D.classes.reduce((a,c)=>a+c.students.length,0);
+  const appr=D.classes.reduce((a,c)=>a+c.students.filter(s=>s.appr).length,0);
+  return{
+    id:'arc'+Date.now(),
+    year, sem, note,
+    date: new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}),
+    timestamp: Date.now(),
+    stats:{ classes:D.classes.length, students:total, appreciations:appr },
+    data: JSON.parse(JSON.stringify(D))  // deep copy
+  };
+}
+
+function saveArchiveLocal(){
+  if(!D.classes.length)return alert('Aucune classe à sauvegarder.');
+  const arc=buildArchiveObj();
+  archives.unshift(arc);
+  saveArchives();
+  document.getElementById('save-modal').classList.remove('open');
+  document.getElementById('save-note').value='';
+  renderArchives();
+  nav('p-arc');
+  setTimeout(()=>alert(`✅ Sauvegarde "${arc.year} – ${arc.sem}" enregistrée avec succès !\n\nVous la retrouverez dans l'onglet Archives.`),100);
+}
+
+function saveArchiveToDevice(){
+  if(!D.classes.length)return alert('Aucune classe à sauvegarder.');
+  const arc=buildArchiveObj();
+  const year=arc.year.replace('–','-');
+  const sem=arc.sem.replace(/\s+/g,'_');
+  const filename=`Maths_GeorgesYoussef_${year}_${sem}.json`;
+  const blob=new Blob([JSON.stringify(arc,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=filename;
+  a.click();
+  document.getElementById('save-modal').classList.remove('open');
+  document.getElementById('save-note').value='';
+}
+
+function importArchive(event){
+  const file=event.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const arc=JSON.parse(e.target.result);
+      if(!arc.data||!arc.data.classes)return alert('❌ Fichier invalide. Vérifiez que c\'est bien un fichier de sauvegarde.');
+      // Check if already exists
+      const exists=archives.find(a=>a.id===arc.id);
+      if(exists){
+        if(!confirm('Cette archive existe déjà. Voulez-vous la remplacer ?'))return;
+        archives=archives.filter(a=>a.id!==arc.id);
+      }
+      archives.unshift(arc);
+      saveArchives();
+      renderArchives();
+      alert(`✅ Archive chargée : ${arc.year} – ${arc.sem}\n📋 ${arc.stats.classes} classe(s) · 👤 ${arc.stats.students} élève(s) · ✅ ${arc.stats.appreciations} appréciation(s)`);
+    }catch(err){
+      alert('❌ Erreur lors de la lecture du fichier : '+err.message);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value='';
+}
+
+function restoreArchive(id){
+  const arc=archives.find(a=>a.id===id);
+  if(!arc)return;
+  const total=D.classes.reduce((a,c)=>a+c.students.length,0);
+  const msg=total>0?
+    `⚠️ Cette action remplacera vos données actuelles (${D.classes.length} classe(s), ${total} élève(s)) par l'archive "${arc.year} – ${arc.sem}".\n\nVoulez-vous continuer ?`:
+    `Restaurer l'archive "${arc.year} – ${arc.sem}" ?\n\n📋 ${arc.stats.classes} classe(s) · 👤 ${arc.stats.students} élève(s)`;
+  if(!confirm(msg))return;
+  D=JSON.parse(JSON.stringify(arc.data));
+  save();
+  renderAll();
+  nav('p-cls');
+  setTimeout(()=>alert(`✅ Archive "${arc.year} – ${arc.sem}" restaurée avec succès !`),100);
+}
+
+function downloadArchive(id){
+  const arc=archives.find(a=>a.id===id);
+  if(!arc)return;
+  const year=arc.year.replace('–','-');
+  const sem=arc.sem.replace(/\s+/g,'_');
+  const filename=`Maths_GeorgesYoussef_${year}_${sem}.json`;
+  const blob=new Blob([JSON.stringify(arc,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=filename;
+  a.click();
+}
+
+function deleteArchive(id){
+  const arc=archives.find(a=>a.id===id);
+  if(!arc)return;
+  if(!confirm(`Supprimer définitivement l'archive "${arc.year} – ${arc.sem}" ?`))return;
+  archives=archives.filter(a=>a.id!==id);
+  saveArchives();
+  renderArchives();
+}
+
+function renderArchives(){
+  loadArchives();
+  const el=document.getElementById('arc-list');
+  if(!archives.length){
+    el.innerHTML=`<div class="empty">
+      <div class="empty-icon">🗄️</div>
+      <div>Aucune archive enregistrée.</div>
+      <div style="font-size:12px;margin-top:6px">Cliquez sur <b>💾 Sauvegarder</b> pour créer votre première archive.</div>
+    </div>`;
+    return;
+  }
+  el.innerHTML=archives.map(arc=>{
+    const semIcon={
+      'Semestre 1':'📘','Semestre 2':'📗','Année complète':'📚',
+      'Trimestre 1':'1️⃣','Trimestre 2':'2️⃣','Trimestre 3':'3️⃣'
+    }[arc.sem]||'📁';
+    return`<div class="arc-card">
+      <div class="arc-top">
+        <div class="arc-icon">${semIcon}</div>
+        <div class="arc-info">
+          <div class="arc-title">${arc.year} &nbsp;·&nbsp; ${arc.sem}</div>
+          <div class="arc-sub">
+            Sauvegardé le ${arc.date}
+            ${arc.note?`<br><i style="color:var(--tx3)">"${arc.note}"</i>`:''}
+          </div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:7px">
+            <span class="arc-tag">📋 ${arc.stats.classes} classe(s)</span>
+            <span class="arc-tag">👤 ${arc.stats.students} élève(s)</span>
+            <span class="arc-tag">✅ ${arc.stats.appreciations} appréciation(s)</span>
+          </div>
+        </div>
+      </div>
+      <div class="arc-actions">
+        <button class="btn btn-p btn-sm" onclick="restoreArchive('${arc.id}')">🔄 Restaurer</button>
+        <button class="btn btn-g btn-sm" onclick="downloadArchive('${arc.id}')">⬇️ Télécharger</button>
+        <button class="btn btn-r btn-sm" onclick="deleteArchive('${arc.id}')">🗑 Supprimer</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+loadArchives();
 load();
 </script>
 </body>
